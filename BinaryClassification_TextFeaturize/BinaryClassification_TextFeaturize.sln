@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryClassification_TextFeaturize", "BinaryClassification_TextFeaturize\BinaryClassification_TextFeaturize.csproj", "{51EB0131-6B76-451B-8FC0-E178C170D1C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51EB0131-6B76-451B-8FC0-E178C170D1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51EB0131-6B76-451B-8FC0-E178C170D1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51EB0131-6B76-451B-8FC0-E178C170D1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51EB0131-6B76-451B-8FC0-E178C170D1C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D637359E-F519-428D-985A-A49B758EBA76}
+	EndGlobalSection
+EndGlobal
