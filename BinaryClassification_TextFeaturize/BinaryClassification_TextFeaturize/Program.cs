@@ -23,25 +23,28 @@ namespace BinaryClassification_TextFeaturize
                 .Append(mlContext.BinaryClassification.Trainers.FastTree(labelColumnName: "Label", featureColumnName: "Features"));
             ITransformer trainedModel = trainingPipeline.Fit(trainData);
 
+            
             //评估
             var predictions = trainedModel.Transform(testData);
             //DebugData(mlContext, predictions);
             var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "Label");
             Console.WriteLine($"Evalution Accuracy: {metrics.Accuracy:P2}");
-
+           
 
             //创建预测引擎
             var predEngine = mlContext.Model.CreatePredictionEngine<MeetingInfo, PredictionResult>(trainedModel);
 
+            //预测1
             MeetingInfo sampleStatement1 = new MeetingInfo { Text = "支委会。" };
             var predictionresult1 = predEngine.Predict(sampleStatement1);
             Console.WriteLine($"{sampleStatement1.Text}:{predictionresult1.PredictedLabel}");
-            predictionresult1.PrintToConsole();
+            //predictionresult1.PrintToConsole();
 
+            //预测2
             MeetingInfo sampleStatement2 = new MeetingInfo { Text = "开展新时代中国特色社会主义思想三十讲党员答题活动。" };
             var predictionresult2 = predEngine.Predict(sampleStatement2);
             Console.WriteLine($"{sampleStatement2.Text}:{predictionresult2.PredictedLabel}");
-            predictionresult2.PrintToConsole();
+            //predictionresult2.PrintToConsole();
 
             Console.WriteLine("Press any to exit!");
             Console.ReadKey();
