@@ -12,7 +12,7 @@ namespace BinaryClassification_Figure
 
         static void Main(string[] args)
         {
-            //TrainAndSave();
+            TrainAndSave();
             LoadAndPrediction();
 
             Console.WriteLine("Press any to exit!");
@@ -22,6 +22,7 @@ namespace BinaryClassification_Figure
         static void TrainAndSave()
         {
             MLContext mlContext = new MLContext();
+            mlContext.Log += MlContext_Log;
 
             //准备数据
             var fulldata = mlContext.Data.LoadFromTextFile<FigureData>(path: DataPath, hasHeader: true, separatorChar: ',');           
@@ -38,7 +39,7 @@ namespace BinaryClassification_Figure
 
             //评估
             var predictions = model.Transform(testData);
-            var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "Result", scoreColumnName: "Score");
+            var metrics = mlContext.BinaryClassification.Evaluate(data: predictions, labelColumnName: "Result");
             PrintBinaryClassificationMetrics(trainer.ToString(), metrics);
 
             //保存模型
@@ -46,15 +47,25 @@ namespace BinaryClassification_Figure
             Console.WriteLine($"Model file saved to :{ModelPath}");
         }
 
+        private static void MlContext_Log(object sender, LoggingEventArgs e)
+        {
+            //Console.WriteLine($"MlContext_Log:{e.Message}");
+        }
+
         static void LoadAndPrediction()
         {
+            //读取模型
             var mlContext = new MLContext();
             ITransformer model = mlContext.Model.Load(ModelPath, out var inputSchema);
+
+            //创建预测引擎
             var predictionEngine = mlContext.Model.CreatePredictionEngine<FigureData, FigureDatePredicted>(model);
 
-            FigureData test = new FigureData();
-            test.Weight = 115;
-            test.Height = 171;
+            FigureData test = new FigureData
+            {
+                Weight = 115,
+                Height = 171
+            };
 
             var prediction = predictionEngine.Predict(test);
             Console.WriteLine($"Predict Result :{prediction.PredictedLabel}");
