@@ -1,27 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.ML;
+using Microsoft.ML.Transforms;
 
 namespace MulticlassClassification_Mnist
 {
-    public class DebugLambdaInput
+    public class DebugConversionInput
     {
-        public float Count { get; set; }
+        public float Serial { get; set; }
+    }
+ 
+    public class DebugConversionOutput
+    {
+        public float DebugFeature { get; set; }
     }
 
-    public class DebugLambdaOutput
+    [CustomMappingFactoryAttribute("DebugConversionAction")]
+    public class DebugConversion : CustomMappingFactory<DebugConversionInput, DebugConversionOutput>
     {
-        public string DebugText { get; set; }
-    }
+        static long Count = 0;
+        static long TotalCount = 0;
 
-    public class DebugLambda
-    {
-        public static void MyAction(DebugLambdaInput input, DebugLambdaOutput output)
+        public void CustomAction(DebugConversionInput input, DebugConversionOutput output)
         {
-            output.DebugText = "";
-            Console.WriteLine($"DebugLambda.MyAction Debug:{input.Count}");
+            output.DebugFeature = 1.0f;
+            Count++;
+            if (Count / 10000 > TotalCount)
+            {
+                TotalCount = Count / 10000;
+                Console.WriteLine($"DebugConversion.CustomAction's debug info.TotalCount={TotalCount}0000 ");
+            }            
         }
-       
-    }
 
+        public override Action<DebugConversionInput, DebugConversionOutput> GetMapping()
+              => CustomAction;
+    }
 }
