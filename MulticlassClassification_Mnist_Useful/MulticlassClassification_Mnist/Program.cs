@@ -46,8 +46,8 @@ namespace MulticlassClassification_Mnist
                .Append(mlContext.Transforms.NormalizeMeanVariance(inputColumnName: "Features", outputColumnName: "FeaturesNormalizedByMeanVar"));
 
 
-            // STEP 3: 配置训练算法
-            var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "Label", featureColumnName: "FeaturesNormalizedByMeanVar");
+            // STEP 3: 配置训练算法 (using a maximum entropy classification model trained with the L-BFGS method)
+            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: "Label", featureColumnName: "FeaturesNormalizedByMeanVar");
             var trainingPipeline = dataProcessPipeline.Append(trainer)
                  .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictNumber", "Label"));
 

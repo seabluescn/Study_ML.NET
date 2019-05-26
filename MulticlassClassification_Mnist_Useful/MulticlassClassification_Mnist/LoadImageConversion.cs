@@ -14,7 +14,7 @@ namespace MulticlassClassification_Mnist
  
     public class LoadImageConversionOutput
     {
-        [VectorType(64)]
+        [VectorType(400)]
         public float[] ImagePixels { get; set; }
 
         public string ImagePath;
@@ -32,18 +32,16 @@ namespace MulticlassClassification_Mnist
             string ImagePath = Path.Combine(TrainDataFolder, input.FileName);
             output.ImagePath = ImagePath;
 
-            Bitmap bmp = Image.FromFile(ImagePath) as Bitmap;
-            Bitmap bmp2 = new Bitmap(bmp, 8, 8);
+            Bitmap bmp = Image.FromFile(ImagePath) as Bitmap;           
 
-            output.ImagePixels = new float[64];
-            for (int x = 0; x < 8; x++)
-                for (int y = 0; y < 8; y++)
+            output.ImagePixels = new float[400];
+            for (int x = 0; x < 20; x++)
+                for (int y = 0; y < 20; y++)
                 {
-                    var pixel = bmp2.GetPixel(x, y);
+                    var pixel = bmp.GetPixel(x, y);
                     var gray = (pixel.R + pixel.G + pixel.B) / 3 / 16;
-                    output.ImagePixels[x + y * 8] = gray;
-                }
-            bmp2.Dispose();
+                    output.ImagePixels[x + y * 20] = gray;
+                }           
             bmp.Dispose();
 
             Count++;
