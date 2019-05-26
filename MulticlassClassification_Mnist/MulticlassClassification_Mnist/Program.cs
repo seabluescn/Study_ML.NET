@@ -50,9 +50,8 @@ namespace MulticlassClassification_Mnist
             // STEP 3: 配置训练算法
             var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-                .Append(mlContext.Transforms.Conversion.MapKeyToValue("Number", "Label"));
-
-
+              .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictNumber", "Label"));
+            
             // STEP 4: 训练模型使其与数据集拟合
             Console.WriteLine("=============== Train the model fitting to the DataSet ===============");
 
@@ -68,12 +67,11 @@ namespace MulticlassClassification_Mnist
             // STEP 5:评估模型的准确性
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testData);
-            var metrics = mlContext.MulticlassClassification.Evaluate(data: predictions, labelColumnName: "Number", scoreColumnName: "Score");
+            var metrics = mlContext.MulticlassClassification.Evaluate(data: predictions, labelColumnName: "PredictNumber", scoreColumnName: "Score");
             PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
             DebugData(mlContext, predictions);
 
-            // STEP 6:保存模型  
-            mlContext.ComponentCatalog.RegisterAssembly(typeof(MLContext).Assembly);
+            // STEP 6:保存模型              
             mlContext.ComponentCatalog.RegisterAssembly(typeof(DebugConversion).Assembly);
             mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
@@ -81,26 +79,25 @@ namespace MulticlassClassification_Mnist
 
         private static void TestSomePredictions(MLContext mlContext)
         {
-            // Load Model
+            // Load Model           
             ITransformer trainedModel = mlContext.Model.Load(ModelPath, out var modelInputSchema);
 
             // Create prediction engine 
             var predEngine = mlContext.Model.CreatePredictionEngine<InputData, OutPutData>(trainedModel);
 
+            //num 1
             InputData MNIST1 = new InputData()
-            {
+            {               
                 PixelValues = new float[] { 0, 0, 0, 0, 14, 13, 1, 0, 0, 0, 0, 5, 16, 16, 2, 0, 0, 0, 0, 14, 16, 12, 0, 0, 0, 1, 10, 16, 16, 12, 0, 0, 0, 3, 12, 14, 16, 9, 0, 0, 0, 0, 0, 5, 16, 15, 0, 0, 0, 0, 0, 4, 16, 14, 0, 0, 0, 0, 0, 1, 13, 16, 1, 0 }
-            }; //num 1
-
+            }; 
             var resultprediction1 = predEngine.Predict(MNIST1);
             resultprediction1.PrintToConsole();
 
-
+            //num 7
             InputData MNIST2 = new InputData()
-            {
+            {               
                 PixelValues = new float[] { 0, 0, 1, 8, 15, 10, 0, 0, 0, 3, 13, 15, 14, 14, 0, 0, 0, 5, 10, 0, 10, 12, 0, 0, 0, 0, 3, 5, 15, 10, 2, 0, 0, 0, 16, 16, 16, 16, 12, 0, 0, 1, 8, 12, 14, 8, 3, 0, 0, 0, 0, 10, 13, 0, 0, 0, 0, 0, 0, 11, 9, 0, 0, 0 }
-            };//num 7
-
+            };
             var resultprediction2 = predEngine.Predict(MNIST2);
             resultprediction2.PrintToConsole();
         }
@@ -132,19 +129,17 @@ namespace MulticlassClassification_Mnist
     class InputData
     {       
         [VectorType(64)]
-        public float[] PixelValues;
-               
+        public float[] PixelValues;               
         public float Number;
-
         public float Serial;        
     }
 
-    class OutPutData
-    {       
-        public float[] Score;
+    class OutPutData : InputData
+    {  
+        public float[] Score;       
 
         public void PrintToConsole()
-        {
+        {  
             Console.WriteLine($"Predicted probability:     zero:  {Score[0]:0.####}");
             Console.WriteLine($"                           One :  {Score[1]:0.####}");
             Console.WriteLine($"                           two:   {Score[2]:0.####}");
@@ -156,5 +151,5 @@ namespace MulticlassClassification_Mnist
             Console.WriteLine($"                           eight: {Score[8]:0.####}");
             Console.WriteLine($"                           nine:  {Score[9]:0.####}");           
         }
-    }
+    }   
 }
