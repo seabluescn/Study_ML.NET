@@ -16,13 +16,14 @@ namespace MulticlassClassification_Mnist
         static void Main(string[] args)
         {
             MLContext mlContext = new MLContext(seed: 1);
-
+          
             TrainAndSaveModel(mlContext);
             TestSomePredictions(mlContext);
 
             Console.WriteLine("Hit any key to finish the app");
             Console.ReadKey();
         }
+              
 
         public static void TrainAndSaveModel(MLContext mlContext)
         {
@@ -127,11 +128,11 @@ namespace MulticlassClassification_Mnist
     }
 
     class InputData
-    {       
+    {
+        public float Serial;
         [VectorType(64)]
         public float[] PixelValues;               
-        public float Number;
-        public float Serial;        
+        public float Number;       
     }
 
     class OutPutData : InputData
