@@ -51,7 +51,7 @@ namespace MulticlassClassification_Mnist
             // STEP 3: 配置训练算法
             var trainer = mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(labelColumnName: "Label", featureColumnName: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-              .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictNumber", "Label"));
+              .Append(mlContext.Transforms.Conversion.MapKeyToValue("Number", "Label"));
             
             // STEP 4: 训练模型使其与数据集拟合
             Console.WriteLine("=============== Train the model fitting to the DataSet ===============");
@@ -68,7 +68,7 @@ namespace MulticlassClassification_Mnist
             // STEP 5:评估模型的准确性
             Console.WriteLine("===== Evaluating Model's accuracy with Test data =====");
             var predictions = trainedModel.Transform(testData);
-            var metrics = mlContext.MulticlassClassification.Evaluate(data: predictions, labelColumnName: "PredictNumber", scoreColumnName: "Score");
+            var metrics = mlContext.MulticlassClassification.Evaluate(data: predictions, labelColumnName: "Number", scoreColumnName: "Score");
             PrintMultiClassClassificationMetrics(trainer.ToString(), metrics);
             DebugData(mlContext, predictions);
 
