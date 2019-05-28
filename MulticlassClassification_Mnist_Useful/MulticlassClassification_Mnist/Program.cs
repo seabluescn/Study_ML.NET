@@ -13,6 +13,7 @@ namespace MulticlassClassification_Mnist
 {
     class Program
     {
+        //Assets files download from:https://gitee.com/seabluescn/ML_Assets
         static readonly string AssetsFolder = @"D:\StepByStep\Blogs\ML_Assets\MNIST";
         static readonly string TrainTagsPath = Path.Combine(AssetsFolder, "train_tags.tsv");
         static readonly string TrainDataFolder = Path.Combine(AssetsFolder, "train");
