@@ -34,17 +34,14 @@ namespace MulticlassClassification_Mnist
         {
             // STEP 1: 准备数据
             var fulldata = mlContext.Data.LoadFromTextFile<InputData>(path: TrainTagsPath, separatorChar: '\t', hasHeader: false);
-
             var trainTestData = mlContext.Data.TrainTestSplit(fulldata, testFraction: 0.1);
             var trainData = trainTestData.TrainSet;
             var testData = trainTestData.TestSet;
 
             // STEP 2: 配置数据处理管道        
-            var dataProcessPipeline = mlContext.Transforms.CustomMapping(new DebugConversion().GetMapping(), contractName: "DebugConversionAction")
-               .Append(mlContext.Transforms.CustomMapping(new LoadImageConversion().GetMapping(), contractName: "LoadImageConversionAction"))
+            var dataProcessPipeline = mlContext.Transforms.CustomMapping(new LoadImageConversion().GetMapping(), contractName: "LoadImageConversionAction")
                .Append(mlContext.Transforms.Conversion.MapValueToKey("Label", "Number", keyOrdinality: ValueToKeyMappingEstimator.KeyOrdinality.ByValue))
-               .Append(mlContext.Transforms.Concatenate("Features", new string[] { "ImagePixels", "DebugFeature" }))
-               .Append(mlContext.Transforms.NormalizeMeanVariance(inputColumnName: "Features", outputColumnName: "FeaturesNormalizedByMeanVar"));
+               .Append(mlContext.Transforms.NormalizeMeanVariance( outputColumnName: "FeaturesNormalizedByMeanVar", inputColumnName: "ImagePixels"));
 
 
             // STEP 3: 配置训练算法 (using a maximum entropy classification model trained with the L-BFGS method)
@@ -71,8 +68,7 @@ namespace MulticlassClassification_Mnist
             DebugData(mlContext, predictions);
 
 
-            // STEP 6:保存模型              
-            mlContext.ComponentCatalog.RegisterAssembly(typeof(DebugConversion).Assembly);
+            // STEP 6:保存模型               
             mlContext.ComponentCatalog.RegisterAssembly(typeof(LoadImageConversion).Assembly);
             mlContext.Model.Save(trainedModel, trainData.Schema, ModelPath);
             Console.WriteLine("The model is saved to {0}", ModelPath);
