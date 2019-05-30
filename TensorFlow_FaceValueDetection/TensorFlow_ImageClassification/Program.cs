@@ -97,7 +97,7 @@ namespace TensorFlow_ImageClassification
                 image.ImagePath = jpgfile.FullName;
                 var pred = predictor.Predict(image);
 
-                Console.WriteLine($"Filename:{jpgfile.Name}:\tPredict Result:{(pred.FaceValue-50)*3}");
+                Console.WriteLine($"Filename:{jpgfile.Name}:\tPredict:{pred.FaceValue}");
             }
         }
 
