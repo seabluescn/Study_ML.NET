@@ -93,8 +93,10 @@ namespace TensorFlow_ImageClassification
             DirectoryInfo testdir = new DirectoryInfo(TestDataFolder);
             foreach (var jpgfile in testdir.GetFiles("*.jpg"))
             {
-                ImageNetData image = new ImageNetData();
-                image.ImagePath = jpgfile.FullName;
+                ImageNetData image = new ImageNetData
+                {
+                    ImagePath = jpgfile.FullName
+                };
                 var pred = predictor.Predict(image);
 
                 Console.WriteLine($"Filename:{jpgfile.Name}:\tPredict:{pred.FaceValue}");
